@@ -7,7 +7,7 @@ provider "azurerm" {
   tenant_id       = var.TENANT_ID
 }
 resource "azurerm_resource_group" "rg-vnet" {
-  name     = "rg-vnet"
+  name     = "rg-vnettest"
   location = "West Europe"
 }
 
