@@ -2,7 +2,9 @@ provider "azurerm" {
   features {}
   use_cli         = true
   subscription_id = "b75d3631-0815-401c-bad4-9f693f354152"
-
+  client_id       = var.client_id
+  client_secret   = var.client_secret
+  tenant_id       = var.tenant_id
 }
 resource "azurerm_resource_group" "rg-vnet" {
   name     = "rg-vnet"
@@ -22,18 +24,27 @@ resource "azurerm_virtual_network" "vnet" {
   address_space       = ["10.0.0.0/16"]
   dns_servers         = ["10.0.0.4", "10.0.0.5"]
 
-  subnet {
-    name             = "subnet1"
-    address_prefixes = ["10.0.1.0/24"]
-  }
-
-  subnet {
-    name             = "subnet2"
-    address_prefixes = ["10.0.2.0/24"]
-    security_group   = azurerm_network_security_group.vnet-sg.id
-  }
-
   tags = {
     environment = "dev"
   }
 }
+
+resource "azurerm_subnet" "subnet1" {
+  name                 = "subnet1"
+  resource_group_name  = azurerm_resource_group.rg-vnet.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.1.0/24"]
+}
+
+resource "azurerm_subnet" "subnet2" {
+  name                 = "subnet2"
+  resource_group_name  = azurerm_resource_group.rg-vnet.name
+  virtual_network_name = azurerm_virtual_network.vnet.name
+  address_prefixes     = ["10.0.2.0/24"]
+}
+
+resource "azurerm_subnet_network_security_group_association" "subnet2_sg_association" {
+  subnet_id                 = azurerm_subnet.subnet2.id
+  network_security_group_id = azurerm_network_security_group.vnet-sg.id
+}
+
