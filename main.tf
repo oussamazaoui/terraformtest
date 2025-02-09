@@ -2,9 +2,9 @@ provider "azurerm" {
   features {}
   use_cli         = true
   subscription_id = "b75d3631-0815-401c-bad4-9f693f354152"
-  client_id       = var.client_id
-  client_secret   = var.client_secret
-  tenant_id       = var.tenant_id
+  client_id       = var.ClientID
+  client_secret   = var.CLIENT_SECRET
+  tenant_id       = var.TENANT_ID
 }
 resource "azurerm_resource_group" "rg-vnet" {
   name     = "rg-vnet"
